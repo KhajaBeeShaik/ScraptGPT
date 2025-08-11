@@ -1,18 +1,22 @@
 // src/types/chat.ts
-// src/types/chat.ts
 
 export interface SearchInfo {
   stages: ('searching' | 'reading' | 'writing' | 'error')[];
   query?: string;
-  urls?: string[];
+  // Server sometimes sends strings or objects; keep it flexible:
+  urls?: unknown[];
   error?: string;
 }
 
-// src/types/chat.ts
+export type Role = 'user' | 'assistant' | 'system';
+export type MessageKind = 'message' | 'notice' | 'error';
+
 export interface Message {
-  id: string; // decide on string everywhere
-  role: 'user' | 'assistant' | 'system';
+  id: string;
+  role: Role;                // use this instead of isUser
+  type: MessageKind;         // you’re already setting "message"
   content: string;
-  // ...whatever else you have
+  isLoading?: boolean;
+  searchInfo?: SearchInfo;
 }
 
