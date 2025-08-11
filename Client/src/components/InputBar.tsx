@@ -5,8 +5,8 @@ interface InputBarProps {
     currentMessage: string;
     // The setCurrentMessage function receives a string and doesn't return anything.
     setCurrentMessage: (message: string) => void;
-    // The onSubmit function is a handler for the form submission.
-    onSubmit: (e: FormEvent) => void;
+    // The onSubmit function is now typed to handle an async function.
+    onSubmit: (e: FormEvent<HTMLFormElement>) => Promise<void>;
 }
 
 // Apply the new interface to the component's props.
