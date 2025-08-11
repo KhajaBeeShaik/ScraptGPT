@@ -1,7 +1,9 @@
-import React from 'react';
-import type { Message, SearchInfo } from '@/types/chat';
+import React from "react";
+// Import the types from the '@/types/chat' file.
+import type { Message, SearchInfo } from "@/types/chat";
 
-const PremiumTypingAnimation = () => {
+// This component remains the same, as it has no props and no type issues.
+const PremiumTypingAnimation: React.FC = () => {
     return (
         <div className="flex items-center">
             <div className="flex items-center space-x-1.5">
@@ -16,7 +18,13 @@ const PremiumTypingAnimation = () => {
     );
 };
 
-const SearchStages = ({ searchInfo }) => {
+// Define the types for the props of the SearchStages component.
+interface SearchStagesProps {
+    searchInfo: SearchInfo;
+}
+
+// Apply the new interface to the SearchStages component.
+const SearchStages: React.FC<SearchStagesProps> = ({ searchInfo }) => {
     if (!searchInfo || !searchInfo.stages || searchInfo.stages.length === 0) return null;
 
     return (
@@ -106,7 +114,13 @@ const SearchStages = ({ searchInfo }) => {
     );
 };
 
-const MessageArea = ({ messages }) => {
+// Define the types for the props of the MessageArea component.
+interface MessageAreaProps {
+    messages: Message[];
+}
+
+// Apply the new interface to the MessageArea component.
+const MessageArea: React.FC<MessageAreaProps> = ({ messages }) => {
     return (
         <div className="flex-grow overflow-y-auto bg-[#FCFCF8] border-b border-gray-100" style={{ minHeight: 0 }}>
             <div className="max-w-4xl mx-auto p-6">
