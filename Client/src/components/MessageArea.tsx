@@ -1,4 +1,5 @@
 import React from 'react';
+import type { Message, SearchInfo } from '@/types/chat';
 
 const PremiumTypingAnimation = () => {
     return (
