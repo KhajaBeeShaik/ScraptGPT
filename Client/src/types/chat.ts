@@ -1,16 +1,17 @@
 // src/types/chat.ts
+// src/types/chat.ts
+
 export interface SearchInfo {
-  stages: string[];
-  query: string;
-  urls: string[];
+  stages: ('searching' | 'reading' | 'writing' | 'error')[];
+  query?: string;
+  urls?: string[];
   error?: string;
 }
 
 export interface Message {
-  id: number;
-  content: string;
+  id: string;
   isUser: boolean;
-  type: "message";
+  content: string;
   isLoading?: boolean;
   searchInfo?: SearchInfo;
 }
