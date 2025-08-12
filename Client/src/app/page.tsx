@@ -4,12 +4,12 @@ import Header from "@/components/Header";
 import InputBar from "@/components/InputBar";
 import MessageArea from "@/components/MessageArea";
 import React, { useState } from "react";
-import type { Message } from "@/types/chat";
+import type { Message } from "@/types/chat"; // ✅ use shared type
 
 const Home = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
-      id: "1", // ✅ changed from number to string
+      id: "1", // ✅ now a string
       content: "Hi there, how can I help you?",
       role: "assistant",
       type: "message",
@@ -23,10 +23,9 @@ const Home = () => {
     if (!currentMessage.trim()) return;
 
     const userInput = currentMessage;
+    const newMessageId = crypto.randomUUID(); // ✅ already a string
 
-    // 1) push user message
-    const newMessageId = crypto.randomUUID();
-
+    // Push user message
     setMessages((prev) => [
       ...prev,
       {
@@ -40,7 +39,7 @@ const Home = () => {
     setCurrentMessage("");
 
     try {
-      // 2) create AI placeholder
+      // AI placeholder
       const aiResponseId = crypto.randomUUID();
       setMessages((prev) => [
         ...prev,
@@ -54,15 +53,14 @@ const Home = () => {
         },
       ]);
 
-      // 3) build SSE url
+      // Build SSE URL
       const baseUrl =
-        "https://scraptgpt.onrender.com" || "http://localhost:8000";
+        process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
       let url = `${baseUrl}/chat_stream/${encodeURIComponent(userInput)}`;
       if (checkpointId) {
         url += `?checkpoint_id=${encodeURIComponent(checkpointId)}`;
       }
 
-      // 4) open EventSource
       const eventSource = new EventSource(url);
       let streamedContent = "";
       let searchData: any = null;
@@ -104,9 +102,13 @@ const Home = () => {
           } else if (data.type === "search_results") {
             try {
               const urls =
-                typeof data.urls === "string" ? JSON.parse(data.urls) : data.urls;
+                typeof data.urls === "string"
+                  ? JSON.parse(data.urls)
+                  : data.urls;
               const newSearchInfo = {
-                stages: searchData ? [...searchData.stages, "reading"] : ["reading"],
+                stages: searchData
+                  ? [...searchData.stages, "reading"]
+                  : ["reading"],
                 query: searchData?.query || "",
                 urls,
               };
@@ -128,7 +130,9 @@ const Home = () => {
             }
           } else if (data.type === "search_error") {
             const newSearchInfo = {
-              stages: searchData ? [...searchData.stages, "error"] : ["error"],
+              stages: searchData
+                ? [...searchData.stages, "error"]
+                : ["error"],
               query: searchData?.query || "",
               error: data.error,
               urls: [] as unknown[],
@@ -194,8 +198,9 @@ const Home = () => {
       setMessages((prev) => [
         ...prev,
         {
-          id: crypto.randomUUID(), // ✅ string ID
-          content: "Sorry, there was an error connecting to the server.",
+          id: crypto.randomUUID(),
+          content:
+            "Sorry, there was an error connecting to the server.",
           role: "assistant",
           type: "message",
           isLoading: false,
