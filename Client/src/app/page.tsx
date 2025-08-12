@@ -56,7 +56,7 @@ const Home = () => {
 
       // 3) build SSE url
       const baseUrl =
-        process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+        https://scraptgpt.onrender.com || "http://localhost:8000";
       let url = `${baseUrl}/chat_stream/${encodeURIComponent(userInput)}`;
       if (checkpointId) {
         url += `?checkpoint_id=${encodeURIComponent(checkpointId)}`;
