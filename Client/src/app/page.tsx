@@ -9,7 +9,7 @@ import type { Message } from "@/types/chat";
 const Home = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
-      id: "1",
+      id: "1", // ✅ changed from number to string
       content: "Hi there, how can I help you?",
       role: "assistant",
       type: "message",
@@ -17,12 +17,6 @@ const Home = () => {
   ]);
   const [currentMessage, setCurrentMessage] = useState("");
   const [checkpointId, setCheckpointId] = useState<string | null>(null);
-
-  // Utility: Normalize any incoming or created message to have a string id
-  const normalize = (m: any): Message => ({
-    ...m,
-    id: String(m.id),
-  });
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -34,13 +28,13 @@ const Home = () => {
     const newMessageId = crypto.randomUUID();
 
     setMessages((prev) => [
-      ...prev.map(normalize),
-      normalize({
+      ...prev,
+      {
         id: newMessageId,
         content: userInput,
         role: "user",
         type: "message",
-      }),
+      },
     ]);
 
     setCurrentMessage("");
@@ -49,20 +43,20 @@ const Home = () => {
       // 2) create AI placeholder
       const aiResponseId = crypto.randomUUID();
       setMessages((prev) => [
-        ...prev.map(normalize),
-        normalize({
+        ...prev,
+        {
           id: aiResponseId,
           content: "",
           role: "assistant",
           type: "message",
           isLoading: true,
           searchInfo: { stages: [], query: "", urls: [] },
-        }),
+        },
       ]);
 
       // 3) build SSE url
       const baseUrl =
-        process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+        "https://scraptgpt.onrender.com" || "http://localhost:8000";
       let url = `${baseUrl}/chat_stream/${encodeURIComponent(userInput)}`;
       if (checkpointId) {
         url += `?checkpoint_id=${encodeURIComponent(checkpointId)}`;
@@ -78,17 +72,13 @@ const Home = () => {
           const data = JSON.parse(event.data);
 
           if (data.type === "checkpoint") {
-            setCheckpointId(String(data.checkpoint_id));
+            setCheckpointId(data.checkpoint_id);
           } else if (data.type === "content") {
             streamedContent += data.content ?? "";
             setMessages((prev) =>
               prev.map((msg) =>
-                msg.id === String(aiResponseId)
-                  ? normalize({
-                      ...msg,
-                      content: streamedContent,
-                      isLoading: false,
-                    })
+                msg.id === aiResponseId
+                  ? { ...msg, content: streamedContent, isLoading: false }
                   : msg
               )
             );
@@ -101,39 +91,35 @@ const Home = () => {
             searchData = newSearchInfo;
             setMessages((prev) =>
               prev.map((msg) =>
-                msg.id === String(aiResponseId)
-                  ? normalize({
+                msg.id === aiResponseId
+                  ? {
                       ...msg,
                       content: streamedContent,
                       searchInfo: newSearchInfo,
                       isLoading: false,
-                    })
+                    }
                   : msg
               )
             );
           } else if (data.type === "search_results") {
             try {
               const urls =
-                typeof data.urls === "string"
-                  ? JSON.parse(data.urls)
-                  : data.urls;
+                typeof data.urls === "string" ? JSON.parse(data.urls) : data.urls;
               const newSearchInfo = {
-                stages: searchData
-                  ? [...searchData.stages, "reading"]
-                  : ["reading"],
+                stages: searchData ? [...searchData.stages, "reading"] : ["reading"],
                 query: searchData?.query || "",
                 urls,
               };
               searchData = newSearchInfo;
               setMessages((prev) =>
                 prev.map((msg) =>
-                  msg.id === String(aiResponseId)
-                    ? normalize({
+                  msg.id === aiResponseId
+                    ? {
                         ...msg,
                         content: streamedContent,
                         searchInfo: newSearchInfo,
                         isLoading: false,
-                      })
+                      }
                     : msg
                 )
               );
@@ -142,9 +128,7 @@ const Home = () => {
             }
           } else if (data.type === "search_error") {
             const newSearchInfo = {
-              stages: searchData
-                ? [...searchData.stages, "error"]
-                : ["error"],
+              stages: searchData ? [...searchData.stages, "error"] : ["error"],
               query: searchData?.query || "",
               error: data.error,
               urls: [] as unknown[],
@@ -152,13 +136,13 @@ const Home = () => {
             searchData = newSearchInfo;
             setMessages((prev) =>
               prev.map((msg) =>
-                msg.id === String(aiResponseId)
-                  ? normalize({
+                msg.id === aiResponseId
+                  ? {
                       ...msg,
                       content: streamedContent,
                       searchInfo: newSearchInfo,
                       isLoading: false,
-                    })
+                    }
                   : msg
               )
             );
@@ -170,12 +154,8 @@ const Home = () => {
               };
               setMessages((prev) =>
                 prev.map((msg) =>
-                  msg.id === String(aiResponseId)
-                    ? normalize({
-                        ...msg,
-                        searchInfo: finalSearchInfo,
-                        isLoading: false,
-                      })
+                  msg.id === aiResponseId
+                    ? { ...msg, searchInfo: finalSearchInfo, isLoading: false }
                     : msg
                 )
               );
@@ -194,13 +174,12 @@ const Home = () => {
         if (!streamedContent) {
           setMessages((prev) =>
             prev.map((msg) =>
-              msg.id === String(aiResponseId)
-                ? normalize({
+              msg.id === aiResponseId
+                ? {
                     ...msg,
-                    content:
-                      "Sorry, there was an error processing your request.",
+                    content: "Sorry, there was an error processing your request.",
                     isLoading: false,
-                  })
+                  }
                 : msg
             )
           );
@@ -213,14 +192,14 @@ const Home = () => {
     } catch (err) {
       console.error("Error setting up EventSource:", err);
       setMessages((prev) => [
-        ...prev.map(normalize),
-        normalize({
-          id: crypto.randomUUID(),
+        ...prev,
+        {
+          id: crypto.randomUUID(), // ✅ string ID
           content: "Sorry, there was an error connecting to the server.",
           role: "assistant",
           type: "message",
           isLoading: false,
-        }),
+        },
       ]);
     }
   };
