@@ -15,11 +15,11 @@ Full-stack, streaming-enabled conversational AI platform combining a **Next.js (
 
 ## 🚀 Features
 
-- **🔴 Real-Time Token Streaming** — Frontend & backend streaming pipeline for low-latency conversational updates (**~60–80% faster perceived response**).
-- **🧠 Multi-Agent Reasoning** — LangGraph DAG orchestration + LangChain agents for live web search, parsing, summarization, and contextual answers.
-- **💬 Dynamic & Context-Aware Responses** — Integrated with OpenAI LLMs, ReACT-style prompt engineering, and external API connectors (e.g., weather, search).
-- **🖥️ Adaptive UI** — Markdown-supported chat interface, mobile responsive, with secure CORS-based API communication.
-- **📊 Observability & Debugging** — Token usage tracking, reasoning path visualization, and latency metrics logging.
+- **🔴 Real-Time Token Streaming** - Frontend & backend streaming pipeline for low-latency conversational updates (**~60–80% faster perceived response**).
+- **🧠 Multi-Agent Reasoning** - LangGraph DAG orchestration + LangChain agents for live web search, parsing, summarization, and contextual answers.
+- **💬 Dynamic & Context-Aware Responses** - Integrated with OpenAI LLMs, ReACT-style prompt engineering, and external API connectors (e.g., weather, search).
+- **🖥️ Adaptive UI** - Markdown-supported chat interface, mobile responsive, with secure CORS-based API communication.
+- **📊 Observability & Debugging** - Token usage tracking, reasoning path visualization, and latency metrics logging.
 
 ---
 
@@ -57,16 +57,3 @@ FastAPI (Server)
   ├─ LangGraph DAG (multi-agent)
   ├─ LangChain tools (search, weather, etc.)
   └─ OpenAI API (ReACT prompting)
-
-
-├── client/                 # Next.js frontend
-│   ├── src/
-│   │   ├── components/     # UI components (MessageArea, InputBar, Header, etc.)
-│   │   ├── app/            # App Router pages
-│   │   └── types/          # Shared TS types (Message, SearchInfo)
-│   └── public/             # Assets
-├── server/                 # FastAPI backend
-│   ├── agents/             # LangChain/LangGraph logic
-│   ├── routes/             # API endpoints (SSE, tools)
-│   └── core/               # Settings, middleware, utils
-└── README.md               # Project documentation
