@@ -57,3 +57,16 @@ FastAPI (Server)
   ├─ LangGraph DAG (multi-agent)
   ├─ LangChain tools (search, weather, etc.)
   └─ OpenAI API (ReACT prompting)
+
+
+├── client/                 # Next.js frontend
+│   ├── src/
+│   │   ├── components/     # UI components (MessageArea, InputBar, Header, etc.)
+│   │   ├── app/            # App Router pages
+│   │   └── types/          # Shared TS types (Message, SearchInfo)
+│   └── public/             # Assets
+├── server/                 # FastAPI backend
+│   ├── agents/             # LangChain/LangGraph logic
+│   ├── routes/             # API endpoints (SSE, tools)
+│   └── core/               # Settings, middleware, utils
+└── README.md               # Project documentation
